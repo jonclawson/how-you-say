@@ -25,12 +25,16 @@
     {{name}}
   </h1>
 
-  <p>{{description}}</p>
+  <p (click)="listen()">{{description}}</p>
 
   <div *ngIf="voice.speech" class="alert alert-primary" role="alert">
     {{voice.speech}}
   </div>
-  <textarea class="form-control" [(ngModel)]="message"></textarea>
+  <textarea
+    (click)="listen()"
+    class="form-control"
+    [(ngModel)]="message"
+  ></textarea>
 
   <select
     class="form-control btn btn-primary"
