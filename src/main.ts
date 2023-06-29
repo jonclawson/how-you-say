@@ -14,7 +14,7 @@ import {
 } from '@angular/common/http';
 
 import { enableProdMode, importProvidersFrom } from '@angular/core';
-import { catchError, Observable, throwError } from 'rxjs';
+import { catchError, Observable, Subscription, throwError } from 'rxjs';
 
 @Component({
   selector: 'my-app',
@@ -39,6 +39,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
     { locale: 'es-MX', name: 'Spanish', class: 'flag-mx' },
     { locale: 'de-DE', name: 'German', class: 'flag-de' },
   ];
+  private subscriptions = [];
   constructor(
     public voice: VoiceService,
     private languageService: LanguageService
@@ -54,17 +55,21 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.stop();
+    this.subscriptions.forEach((sub: Subscription) => {
+      sub.unsubscribe();
+    });
   }
 
   listen() {
     this.voice.command('how you say');
-    this.voice.messagesSub.subscribe((messages) => {
+    const sub = this.voice.messagesSub.subscribe((messages) => {
       if (messages && messages.length) {
         this.message = messages[messages.length - 1];
         this.history.push(this.message);
         this.translate();
       }
     });
+    this.subscriptions.push(sub);
   }
 
   stop() {
@@ -77,7 +82,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
   }
 
   translate() {
-    this.languageService
+    const sub = this.languageService
       .translate(this.message, this.target, this.source)
       .pipe(
         catchError((e: HttpErrorResponse) => {
@@ -94,6 +99,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
           this.translation = response;
         }
       });
+    this.subscriptions.push(sub);
   }
 }
 bootstrapApplication(App, {
