@@ -18,7 +18,7 @@ export class LanguageService {
     const options = {
       params: { langpair: `${source}|${target}`, q: message },
       headers: new HttpHeaders({
-        'X-RapidAPI-Key': '!d421086e0cmshfaf322333efb0a5p1c4df2jsnd483e57c2751',
+        'X-RapidAPI-Key': 'd421086e0cmshfaf322333efb0a5p1c4df2jsnd483e57c2751',
         'X-RapidAPI-Host':
           'translated-mymemory---translation-memory.p.rapidapi.com',
       }),
