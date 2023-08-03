@@ -1,3 +1,77 @@
-trip-down
+<div class="container">
+  <h1>
+    <i
+      style="vertical-align: top"
+      [ngClass]="targetLanguage.class"
+      class="flag"
+    ></i>
+    <button (click)="listen()" class="btn btn-primary btn-sm">
+      <svg
+        xmlns="http://www.w3.org/2000/svg"
+        width="16"
+        height="16"
+        fill="currentColor"
+        class="bi bi-mic"
+        viewBox="0 0 16 16"
+      >
+        <path
+          d="M3.5 6.5A.5.5 0 0 1 4 7v1a4 4 0 0 0 8 0V7a.5.5 0 0 1 1 0v1a5 5 0 0 1-4.5 4.975V15h3a.5.5 0 0 1 0 1h-7a.5.5 0 0 1 0-1h3v-2.025A5 5 0 0 1 3 8V7a.5.5 0 0 1 .5-.5z"
+        />
+        <path
+          d="M10 8a2 2 0 1 1-4 0V3a2 2 0 1 1 4 0v5zM8 0a3 3 0 0 0-3 3v5a3 3 0 0 0 6 0V3a3 3 0 0 0-3-3z"
+        />
+      </svg>
+    </button>
+    {{name}}
+  </h1>
 
-[Edit on StackBlitz ⚡️](https://stackblitz.com/edit/trip-down)
+  <p (click)="listen()">{{description}}</p>
+
+  <div *ngIf="voice.speech" class="alert alert-primary" role="alert">
+    {{voice.speech}}
+  </div>
+  <textarea
+    (click)="listen()"
+    class="form-control"
+    [(ngModel)]="message"
+  ></textarea>
+
+  <select
+    class="form-control btn btn-primary"
+    [(ngModel)]="target"
+    placeholder="Language"
+  >
+    <option
+      (click)="setTarget(lang.locale)"
+      *ngFor="let lang of languages"
+      [value]="lang.locale"
+    >
+      {{lang.name}}
+    </option>
+  </select>
+
+  <!-- <div dropdown class="btn-group form-control" style="padding: 0">
+      <button id="button-basic" dropdownToggle type="button" class="form-control btn btn-primary dropdown-toggle" aria-controls="dropdown-basic">
+        Language: {{targetLanguage.name}} <span class="caret"></span>
+      </button>
+      <ul id="dropdown-basic" *dropdownMenu class="dropdown-menu form-control"
+          role="menu" aria-labelledby="button-basic">
+        <li *ngFor="let lang of languages" role="menuitem">
+          <a (click)="setTarget(lang.locale)" class="dropdown-item" href="#">
+            {{lang.name}} <i [ngClass]="lang.class" class="flag"></i>
+          </a>
+        </li>
+     
+      </ul>
+    </div> -->
+
+  <button (click)="translate()" class="form-control btn btn-primary">
+    Translate
+  </button>
+  <div *ngIf="translation" class="alert alert-primary">
+    <p>You say:</p>
+    <p>{{translation}}</p>
+  </div>
+
+  <div *ngIf="apiError" class="alert alert-danger">API Error: {{apiError}}</div>
+</div>
