@@ -49,6 +49,7 @@ export class VoiceService {
   command(keyword: string) {
     let matched = false;
 
+    // TODO: Clean up data and duplicate subscriptions
     // this.messages = [];
     // this.messagesSub.next(this.messages);
     // this.transcript = '';
