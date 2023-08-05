@@ -48,6 +48,12 @@ export class VoiceService {
 
   command(keyword: string) {
     let matched = false;
+
+    // this.messages = [];
+    // this.messagesSub.next(this.messages);
+    // this.transcript = '';
+    // this.transcriptSub.next(this.transcript);
+
     this.subscription = this.listen().subscribe((speech) => {
       if (speech.startsWith(keyword) && this.done) {
         const msg = speech.replace(keyword, '');

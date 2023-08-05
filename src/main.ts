@@ -14,7 +14,7 @@ import {
 } from '@angular/common/http';
 
 import { enableProdMode, importProvidersFrom } from '@angular/core';
-import { catchError, Observable, Subscription, throwError } from 'rxjs';
+import { catchError, Observable, Subscription, take, throwError } from 'rxjs';
 import { SpeekService } from './speek.service';
 
 @Component({
@@ -57,14 +57,22 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
 
   ngOnDestroy() {
     this.stop();
-    this.subscriptions.forEach((sub: Subscription) => {
-      sub.unsubscribe();
-    });
+    this.unSubscribe();
+  }
+
+  unSubscribe() {
+    if (this.subscriptions?.length) {
+      this.subscriptions.forEach((sub: Subscription) => {
+        sub.unsubscribe();
+      });
+    }
   }
 
   listen() {
+    this.unSubscribe();
     this.voice.command('how you say');
     const sub = this.voice.messagesSub.subscribe((messages) => {
+      console.log('listen', messages);
       if (messages && messages.length) {
         this.message = messages[messages.length - 1];
         this.history.push(this.message);
@@ -87,6 +95,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
     const sub = this.languageService
       .translate(this.message, this.target, this.source)
       .pipe(
+        take(1),
         catchError((e: HttpErrorResponse) => {
           console.log(e);
           this.apiError = e.error.message;
@@ -96,7 +105,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
         })
       )
       .subscribe((response) => {
-        console.log(response);
+        console.log('translate', response);
         if (response) {
           this.translation = response;
           this.speekService.speek(response)
