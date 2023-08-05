@@ -15,6 +15,7 @@ import {
 
 import { enableProdMode, importProvidersFrom } from '@angular/core';
 import { catchError, Observable, Subscription, throwError } from 'rxjs';
+import { SpeekService } from './speek.service';
 
 @Component({
   selector: 'my-app',
@@ -42,7 +43,8 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
   private subscriptions = [];
   constructor(
     public voice: VoiceService,
-    private languageService: LanguageService
+    private languageService: LanguageService,
+    private speekService: SpeekService
   ) {}
 
   ngOnInit() {
@@ -97,6 +99,7 @@ export class App implements OnInit, AfterViewInit, OnDestroy {
         console.log(response);
         if (response) {
           this.translation = response;
+          this.speekService.speek(response)
         }
       });
     this.subscriptions.push(sub);
